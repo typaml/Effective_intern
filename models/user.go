@@ -23,3 +23,7 @@ type Task struct {
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }
+
+type UnfetchingData struct {
+	PassportNumber string `json:"passportNumber"`
+}

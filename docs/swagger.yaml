@@ -8,14 +8,17 @@ definitions:
         type: string
       id:
         type: integer
-      name:
-        type: string
       startTime:
         type: string
       updatedAt:
         type: string
       userID:
         type: integer
+    type: object
+  models.UnfetchingData:
+    properties:
+      passportNumber:
+        type: string
     type: object
   models.User:
     properties:
@@ -29,7 +32,7 @@ definitions:
         type: string
       passportNumber:
         type: string
-      passportSerie:
+      passportSeries:
         type: string
       patronymic:
         type: string
@@ -77,6 +80,13 @@ paths:
       consumes:
       - application/json
       description: Create user
+      parameters:
+      - description: passportNumber
+        in: body
+        name: passportNumber
+        required: true
+        schema:
+          $ref: '#/definitions/models.UnfetchingData'
       produces:
       - application/json
       responses:
@@ -93,16 +103,18 @@ paths:
     delete:
       consumes:
       - application/json
-      description: Delete user
+      description: Delete a user by ID
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
       produces:
       - application/json
       responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.User'
-            type: array
+        "204":
+          description: No Content
       summary: Delete user
       tags:
       - users
@@ -110,6 +122,12 @@ paths:
       consumes:
       - application/json
       description: Get user by ID
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
       produces:
       - application/json
       responses:
@@ -125,16 +143,26 @@ paths:
     put:
       consumes:
       - application/json
-      description: Update user
+      description: Update an existing user
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: User
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.User'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            items:
-              $ref: '#/definitions/models.User'
-            type: array
+            $ref: '#/definitions/models.User'
       summary: Update user
       tags:
       - users
@@ -143,6 +171,12 @@ paths:
       consumes:
       - application/json
       description: Get user tasks
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
       produces:
       - application/json
       responses:
@@ -155,11 +189,17 @@ paths:
       summary: Get tasks
       tags:
       - users
-  /users/{id}/tasks/start:
+  /users/tasks/{id}/start:
     post:
       consumes:
       - application/json
       description: Start user tasks
+      parameters:
+      - description: Task ID
+        in: path
+        name: taskId
+        required: true
+        type: integer
       produces:
       - application/json
       responses:
@@ -167,16 +207,22 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/models.User'
+              $ref: '#/definitions/models.Task'
             type: array
       summary: Start tasks
       tags:
       - tasks
-  /users/{id}/tasks/stop:
+  /users/tasks/{id}/stop:
     post:
       consumes:
       - application/json
       description: Stop user tasks
+      parameters:
+      - description: Task ID
+        in: path
+        name: taskId
+        required: true
+        type: integer
       produces:
       - application/json
       responses:
@@ -184,7 +230,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/models.User'
+              $ref: '#/definitions/models.Task'
             type: array
       summary: Stop tasks
       tags:

@@ -45,6 +45,7 @@ func (uc *UserController) GetUsers(c *gin.Context) {
 // @Tags users
 // @Accept  json
 // @Produce  json
+// @Param id path int true "User ID"
 // @Success 200 {array} models.User
 // @Router /users/{id} [get]
 func (uc *UserController) GetUserByID(c *gin.Context) {
@@ -70,6 +71,7 @@ func (uc *UserController) GetUserByID(c *gin.Context) {
 // @Tags users
 // @Accept  json
 // @Produce  json
+// @Param id path int true "User ID"
 // @Success 200 {array} models.User
 // @Router /users/{id}/tasks [get]
 func (uc *UserController) GetUserTasks(c *gin.Context) {
@@ -95,12 +97,11 @@ func (uc *UserController) GetUserTasks(c *gin.Context) {
 // @Tags users
 // @Accept  json
 // @Produce  json
+// @Param passportNumber body models.UnfetchingData true "passportNumber"
 // @Success 200 {array} models.User
 // @Router /users [post]
 func (uc *UserController) CreateUser(c *gin.Context) {
-	var request struct {
-		PassportNumber string `json:"passportNumber"`
-	}
+	var request models.UnfetchingData
 	if err := c.ShouldBindJSON(&request); err != nil {
 		utils.Error("CreateUser: error binding JSON:", err)
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -132,11 +133,13 @@ func (uc *UserController) CreateUser(c *gin.Context) {
 }
 
 // @Summary Update user
-// @Description Update user
+// @Description Update an existing user
 // @Tags users
 // @Accept  json
 // @Produce  json
-// @Success 200 {array} models.User
+// @Param id path int true "User ID"
+// @Param user body models.User true "User"
+// @Success 200 {object} models.User
 // @Router /users/{id} [put]
 func (uc *UserController) UpdateUser(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
@@ -162,11 +165,12 @@ func (uc *UserController) UpdateUser(c *gin.Context) {
 }
 
 // @Summary Delete user
-// @Description Delete user
+// @Description Delete a user by ID
 // @Tags users
 // @Accept  json
 // @Produce  json
-// @Success 200 {array} models.User
+// @Param id path int true "User ID"
+// @Success 204
 // @Router /users/{id} [delete]
 func (uc *UserController) DeleteUser(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
@@ -190,8 +194,9 @@ func (uc *UserController) DeleteUser(c *gin.Context) {
 // @Tags tasks
 // @Accept  json
 // @Produce  json
-// @Success 200 {array} models.User
-// @Router /users/{id}/tasks/start [post]
+// @Param taskId path int true "Task ID"
+// @Success 200 {array} models.Task
+// @Router /users/tasks/{id}/start [post]
 func (uc *UserController) StartTask(c *gin.Context) {
 	utils.Info("StartTask: called")
 	taskId, err := strconv.Atoi(c.Param("taskId"))
@@ -207,7 +212,7 @@ func (uc *UserController) StartTask(c *gin.Context) {
 		return
 	}
 	utils.Info("Start task: successfully start task user with ID:", taskId)
-	c.Status(http.StatusNoContent)
+	c.Status(http.StatusOK)
 }
 
 // @Summary Stop tasks
@@ -215,8 +220,9 @@ func (uc *UserController) StartTask(c *gin.Context) {
 // @Tags tasks
 // @Accept  json
 // @Produce  json
-// @Success 200 {array} models.User
-// @Router /users/{id}/tasks/stop [post]
+// @Param taskId path int true "Task ID"
+// @Success 200 {array} models.Task
+// @Router /users/tasks/{id}/stop [post]
 func (uc *UserController) StopTask(c *gin.Context) {
 	utils.Info("StopTask: called")
 	taskId, err := strconv.Atoi(c.Param("taskId"))
