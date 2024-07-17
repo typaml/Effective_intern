@@ -9,7 +9,7 @@
 
 ## Установка
 Клонируйте репозиторий:
-git clone https://github.com/typaml/Effective_intern
+git clone https://github.com/typaml/Effective_intern.git
 
 Установите зависимости:
 go mod tidy
